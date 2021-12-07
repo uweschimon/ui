@@ -1,0 +1,49 @@
+#!/bin/sh
+#set -x
+# uwe.schimon@mailpost.de 20211203
+# unique interface is tbl-focused, can use for insert or requests of digital artifacts 
+
+echo -n "[-h|--hash]= [-s|--size]= [-e|--extn]= [-n|--name]= [-m|--mime]= [-t|--time]= [-f|--file]= [-wd|--working-directory]=" > args.usage
+. ./args.create.sh
+. ./args.sh
+args $@
+
+if [ ! -z "$H" ]; then
+ h=$H
+ if [ -e "$WD/hash/$h" ];  then
+  f=`head -1 "$WD/hash/$h"`
+ else
+  F=""
+ fi
+fi
+
+if [ ! -z "$F" ]; then
+ f="$F"
+ h=`md5sum "$f" | awk '{print $1}'` 
+fi
+
+if [ -e "$f" ]; then
+ s=`stat -f %z -- "$f"`
+ e="${f##*.}"
+ n="${f##*/}"
+ m=`file --mime-type "$f" | awk -F': ' '{print $2}' | sed -E "s/[^0-9a-zA-Z\-]/--/g"`
+ t=`stat -t "%Y-%m-%d-%H-%M-%S" "$f" | awk '{print $12}' | sed -E "s/[\"]//g"`
+ echo "$f $s $e $n $m $t $h"
+fi
+
+exit
+
+
+#  basename=
+#  timename=
+#  countname=
+#  loc
+#  time
+#  tag
+ fi
+fi 
+
+
+
+# DSC003.JPG  DSC 003 JPG
+# 20110912_Wanderung_TheoAdam_ATOlpe
